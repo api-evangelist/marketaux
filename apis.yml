@@ -1,0 +1,32 @@
+aid: marketaux
+name: MarketAux
+description: "Live stock market news with tagged tickers + sentiment and stats JSON API"
+url: https://www.marketaux.com/
+specificationVersion: '0.20'
+created: '2026-05-28'
+modified: '2026-05-28'
+x-source: public-apis/public-apis
+x-category: "News"
+x-tier: 3
+x-tier-reason: bulk-registered-from-public-apis
+tags:
+  - News
+  - Public APIs
+apis:
+  - name: MarketAux
+    description: "Live stock market news with tagged tickers + sentiment and stats JSON API"
+    humanURL: https://www.marketaux.com/
+    baseURL: https://www.marketaux.com/
+    tags:
+      - News
+    properties:
+      - type: Documentation
+        url: https://www.marketaux.com/
+common:
+  - type: Website
+    url: https://www.marketaux.com/
+  - type: PublicAPIsListing
+    url: https://github.com/public-apis/public-apis
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
