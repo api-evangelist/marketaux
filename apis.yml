@@ -23,6 +23,8 @@ apis:
       - type: Documentation
         url: https://www.marketaux.com/
 common:
+  - type: DomainSecurity
+    url: security/marketaux-domain-security.yml
   - type: Website
     url: https://www.marketaux.com/
   - type: PublicAPIsListing
