@@ -1,0 +1,29 @@
+generated: '2026-07-22'
+method: searched
+source: >-
+  https://www.marketaux.com/documentation (URI-path versioning observed across
+  every documented endpoint); probes of status.marketaux.com (no DNS record,
+  2026-07-22); https://www.marketaux.com/pricing (custom SLA offered on custom
+  plans only).
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://www.marketaux.com/documentation
+  notes: >-
+    All endpoints are versioned under /v1/. No versioning or upgrade policy is
+    published beyond the path prefix.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No deprecation policy or RFC 8594 Sunset/Deprecation header support is documented.
+sla:
+  url: null
+  public_uptime_target: null
+  notes: >-
+    No public SLA. The pricing page offers a "Custom SLA" as part of
+    custom-plan negotiations only.
+status_page: null
+status_page_notes: >-
+  No status page found: status.marketaux.com does not resolve and no status
+  link is published on the site.
+deprecated_operations: []

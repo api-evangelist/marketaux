@@ -1,0 +1,67 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: MarketAux
+providerId: marketaux
+generated: '2026-07-22'
+method: searched
+created: '2026-07-22'
+modified: '2026-07-22'
+tags:
+  - Rate Limiting
+  - News
+description: >-
+  Marketaux enforces two ceilings: a rolling 60-second rate limit signaled via
+  the X-RateLimit-Limit header (429 rate_limit_reached when exceeded; the
+  numeric per-minute cap is not published), and a plan-based daily usage quota
+  signaled via the X-UsageLimit-Limit header (402 usage_limit_reached when
+  exhausted). Daily quotas per plan are published on the pricing page.
+sources:
+  - https://www.marketaux.com/documentation#errors
+  - https://www.marketaux.com/pricing
+headers:
+  rateLimit: X-RateLimit-Limit
+  usageLimit: X-UsageLimit-Limit
+responseCodes:
+  throttled: 429
+  usageExceeded: 402
+limits:
+  - name: Rolling rate limit (all plans)
+    scope: account
+    metric: requests_per_minute
+    limit: -1
+    timeFrame: 60 seconds
+    notes: >-
+      Numeric cap not published; current limit and remaining requests are
+      exposed on the X-RateLimit-Limit header family.
+  - name: Daily requests — Free
+    scope: account
+    plan: Free
+    metric: requests_per_day
+    limit: 100
+    timeFrame: day
+  - name: Daily requests — Basic
+    scope: account
+    plan: Basic
+    metric: requests_per_day
+    limit: 2500
+    timeFrame: day
+  - name: Daily requests — Standard
+    scope: account
+    plan: Standard
+    metric: requests_per_day
+    limit: 10000
+    timeFrame: day
+  - name: Daily requests — Pro
+    scope: account
+    plan: Pro
+    metric: requests_per_day
+    limit: 25000
+    timeFrame: day
+  - name: Daily requests — Pro 50K
+    scope: account
+    plan: Pro 50K
+    metric: requests_per_day
+    limit: 50000
+    timeFrame: day
+limit_count: 6

@@ -1,0 +1,15 @@
+generated: '2026-07-22'
+method: generated
+skills:
+  - file: marketaux-build-entity-news-feed.md
+    name: Build an entity-filtered market news feed
+    api: openapi/marketaux-openapi.yml
+    operations: [searchEntities, getAllNews, getSimilarNews, getNewsByUuid]
+  - file: marketaux-monitor-entity-sentiment.md
+    name: Monitor entity sentiment over time
+    api: openapi/marketaux-openapi.yml
+    operations: [getEntityStatsIntraday, getEntityStatsAggregation, getAllNews]
+  - file: marketaux-find-trending-entities.md
+    name: Find trending entities in the news
+    api: openapi/marketaux-openapi.yml
+    operations: [getTrendingEntities, getAllNews, getNewsSources]

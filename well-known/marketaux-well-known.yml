@@ -1,0 +1,40 @@
+generated: '2026-07-22'
+method: probed
+source: live probes of www.marketaux.com and api.marketaux.com on 2026-07-22
+summary: >-
+  No /.well-known/ discovery documents are published on the Marketaux hosts.
+  All probed paths returned 404 (absence is valid data). The API host root
+  returns 404 for spec locations as well — Marketaux publishes no
+  machine-readable contract.
+hosts:
+  - host: www.marketaux.com
+    paths:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /openapi.json
+        status: 404
+  - host: api.marketaux.com
+    paths:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /openapi.json
+        status: 404
+      - path: /openapi.yaml
+        status: 404
+      - path: /swagger.json
+        status: 404
+      - path: /v1/openapi.json
+        status: 404
+      - path: /api-docs
+        status: 404
+files: []

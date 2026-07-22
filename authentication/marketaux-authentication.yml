@@ -1,0 +1,23 @@
+generated: '2026-07-22'
+method: searched
+source: openapi/marketaux-openapi.yml
+docs: https://www.marketaux.com/documentation#authentication
+notes: >-
+  The documentation's Authentication section confirms the single auth
+  mechanism: sign up free, find the API token on the account dashboard, and
+  add it to any endpoint as the api_token GET parameter. No OAuth, no header
+  schemes.
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - query
+schemes:
+- name: apiToken
+  type: apiKey
+  in: query
+  parameter: api_token
+  description: Your API token, found on your account dashboard after signing up at https://www.marketaux.com/register.
+    Passed as a GET parameter on every request.
+  sources:
+  - openapi/marketaux-openapi.yml

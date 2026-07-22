@@ -1,0 +1,51 @@
+generated: '2026-07-22'
+method: derived
+source: >-
+  Derived from https://www.marketaux.com/documentation (authentication, errors,
+  pagination, date/encoding conventions) and openapi/marketaux-openapi.yml;
+  well-known probes of www.marketaux.com and api.marketaux.com (2026-07-22).
+standards:
+  - id: api-key-auth
+    conforms: true
+    evidence: Single query-parameter API token (api_token) documented for every endpoint.
+  - id: oauth2
+    conforms: false
+    evidence: No OAuth 2.0 flows documented; no /.well-known/oauth-authorization-server (404).
+  - id: oidc
+    conforms: false
+    evidence: No /.well-known/openid-configuration on www.marketaux.com or api.marketaux.com (404).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use a vendor envelope {"error": {"code", "message"}} with
+      application/json, not application/problem+json.
+  - id: pagination
+    conforms: true
+    evidence: >-
+      Page-based pagination (page + limit parameters, meta.found/returned/
+      limit/page response fields) documented on all list endpoints; 20,000
+      max result window.
+  - id: rate-limit-headers
+    conforms: true
+    evidence: >-
+      X-RateLimit-Limit (60-second window, 429) and X-UsageLimit-Limit (daily
+      quota, 402) headers documented in the error reference.
+  - id: idempotency
+    conforms: false
+    evidence: No Idempotency-Key contract; the API surface is GET-only.
+  - id: iso8601-dates
+    conforms: true
+    evidence: >-
+      All dates are UTC (GMT); published_* parameters accept ISO 8601-style
+      Y-m-d\TH:i:s formats and responses return ISO 8601 timestamps.
+  - id: iso3166-country-codes
+    conforms: true
+    evidence: countries parameters use ISO 3166-1 two-letter country codes per the docs.
+  - id: json-api
+    conforms: false
+    evidence: Plain JSON envelope (meta/data), not the JSON:API media type.
+  - id: openapi-published
+    conforms: false
+    evidence: >-
+      No machine-readable OpenAPI/Swagger published by the provider; the spec
+      in openapi/ was generated from the HTML documentation.

@@ -1,0 +1,47 @@
+generated: '2026-07-22'
+method: searched
+source: https://www.marketaux.com/documentation#api-examples
+description: >-
+  Example requests captured verbatim from the Marketaux API documentation
+  (YOUR_API_TOKEN is the provider's documented placeholder). Full example
+  responses for each operation are embedded in openapi/marketaux-openapi.yml.
+examples:
+  - name: Entity-filtered news feed
+    operation: getAllNews
+    description: >-
+      Retrieve all articles which have mentioned AAPL and TSLA, and filter the
+      entities array so only these are displayed with articles.
+    request: GET https://api.marketaux.com/v1/news/all?symbols=AAPL%2CTSLA&filter_entities=true&api_token=YOUR_API_TOKEN
+  - name: Positive-sentiment news
+    operation: getAllNews
+    description: Find all articles with positive entity sentiment in English.
+    request: GET https://api.marketaux.com/v1/news/all?sentiment_gte=0.1&language=en&api_token=YOUR_API_TOKEN
+  - name: Neutral-sentiment news
+    operation: getAllNews
+    description: Find all articles with neutral entity sentiment in English.
+    request: GET https://api.marketaux.com/v1/news/all?sentiment_gte=0&sentiment_lte=0&language=en&api_token=YOUR_API_TOKEN
+  - name: Negative-sentiment news
+    operation: getAllNews
+    description: Find all articles with negative entity sentiment in English.
+    request: GET https://api.marketaux.com/v1/news/all?sentiment_lte=-0.1&language=en&api_token=YOUR_API_TOKEN
+  - name: Day-by-day top US entities
+    operation: getEntityStatsIntraday
+    description: >-
+      Get a day-by-day breakdown of top mentioned entities for exchanges in the
+      US for a month window.
+    request: GET https://api.marketaux.com/v1/entity/stats/intraday?interval=day&group_by=symbol&countries=us&published_after=2026-06-01T00%3A00&published_before=2026-06-30T23%3A59&api_token=YOUR_API_TOKEN
+  - name: Top entities by sentiment for a day
+    operation: getEntityStatsIntraday
+    description: Get an aggregation of the top entities by sentiment for a single day.
+    request: GET https://api.marketaux.com/v1/entity/stats/intraday?group_by=symbol&sort=sentiment_avg&sort_order=desc&published_on=2026-07-21&api_token=YOUR_API_TOKEN
+  - name: Similar articles
+    operation: getSimilarNews
+    description: Find similar stories to a specific article based on its UUID.
+    request: GET https://api.marketaux.com/v1/news/similar/cc11e3ab-ced0-4a42-9146-e426505e2e67?api_token=YOUR_API_TOKEN&language=en&published_on=2020-12-01
+  - name: Entity search
+    operation: searchEntities
+    description: Search for the TSLA entity on US exchanges.
+    request: GET https://api.marketaux.com/v1/entity/search?search=tsla&countries=us&api_token=YOUR_API_TOKEN
+code_examples:
+  languages: [PHP, Python, Go, JavaScript, C#, Java]
+  docs: https://www.marketaux.com/documentation#code-examples

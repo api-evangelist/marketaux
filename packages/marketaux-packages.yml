@@ -1,0 +1,17 @@
+generated: '2026-07-22'
+method: searched
+source: >-
+  Searched npm, PyPI, RubyGems, NuGet, Packagist, crates.io, pkg.go.dev and the
+  Marketaux documentation on 2026-07-22. Marketaux ships no first-party client
+  libraries — the docs provide raw code examples (PHP, Python, Go, JavaScript,
+  C#, Java) instead of SDKs, and there is no Marketaux GitHub organization
+  (github.com/marketaux 404). One community package exists on npm.
+packages:
+  - language: javascript
+    registry: npm
+    name: marketaux-api
+    url: https://www.npmjs.com/package/marketaux-api
+    install: npm install marketaux-api
+    official: false
+    notes: Community-published wrapper (publisher viriato); not affiliated with Marketaux.
+official_sdk_count: 0

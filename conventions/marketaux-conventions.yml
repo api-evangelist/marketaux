@@ -1,0 +1,88 @@
+generated: '2026-07-22'
+method: searched
+source: https://www.marketaux.com/documentation
+description: >-
+  Cross-cutting request/response semantics of the Marketaux API: a read-only
+  (GET-only) JSON API authenticated with a query-string API token, page-based
+  pagination with a hard 20,000-result window, a vendor error envelope, and
+  header-based rate-limit and usage-limit signaling.
+base_url: https://api.marketaux.com/v1
+api_style: REST over HTTPS, GET-only query-parameter requests, JSON responses
+
+authentication:
+  scheme: API token passed as the api_token GET query parameter on every request
+  docs: https://www.marketaux.com/documentation#authentication
+  detail: authentication/marketaux-authentication.yml
+  notes: Tokens are issued on the account dashboard after free self-serve signup.
+
+idempotency:
+  supported: false
+  notes: >-
+    No idempotency-key contract is documented. The entire public surface is
+    HTTP GET (read-only), so every operation is inherently idempotent, but
+    there is no Idempotency-Key header or replay semantics to capture.
+
+pagination:
+  style: page
+  request_params:
+    page: Page number, default 1.
+    limit: >-
+      Results per page; maximum and default are plan-based (3 free / 20 basic /
+      50 standard / 100 pro per news request). Fixed at 50 on entity search and
+      sources endpoints.
+  response_fields:
+    meta.found: Total results found for the request.
+    meta.returned: Results returned on this page (end of set when lower than limit).
+    meta.limit: The applied limit.
+    meta.page: The current page.
+  max_result_window: >-
+    The max result set cannot exceed 20,000 results; e.g. with limit=50 the
+    maximum page is 400.
+
+field_expansion:
+  supported: false
+  notes: >-
+    No expand/sparse-fields mechanism. filter_entities=true trims the entities
+    array to those matching the query; group_similar collapses near-duplicate
+    articles.
+
+metadata:
+  supported: false
+
+request_tracing:
+  supported: false
+  notes: No request-id header is documented.
+
+versioning:
+  scheme: uri-path
+  current: v1
+  detail: lifecycle/marketaux-lifecycle.yml
+
+encoding_and_dates:
+  request_encoding: GET parameters must be URL-encoded.
+  response_encoding: All text data returned is UTF-8.
+  timezone: All dates are UTC (GMT).
+  date_formats: 'Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y'
+
+search_syntax:
+  supported: true
+  notes: >-
+    The search parameter supports advanced query syntax over title and body:
+    + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses
+    (precedence); escape literals with a backslash.
+
+error_envelope:
+  shape: '{ "error": { "code": string, "message": string } }'
+  detail: errors/marketaux-problem-types.yml
+
+rate_limit_signaling:
+  headers:
+    - X-RateLimit-Limit
+  window: 60 seconds
+  throttle_status: 429 (rate_limit_reached)
+  usage_limits:
+    headers:
+      - X-UsageLimit-Limit
+    window: daily, plan-based
+    exceeded_status: 402 (usage_limit_reached)
+  detail: rate-limits/marketaux-rate-limits.yml

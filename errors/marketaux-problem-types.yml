@@ -1,0 +1,67 @@
+generated: '2026-07-22'
+method: searched
+source: https://www.marketaux.com/documentation#errors
+format: vendor-envelope
+description: >-
+  Marketaux does not use RFC 9457 application/problem+json. Every unsuccessful
+  request returns a JSON error envelope {"error": {"code", "message"}} with a
+  documented machine-readable code. The full error registry below is captured
+  verbatim from the published error reference; the 401 example was verified
+  live against https://api.marketaux.com/v1/news/all on 2026-07-22.
+envelope:
+  media_type: application/json
+  shape: '{ "error": { "code": string, "message": string } }'
+  example:
+    error:
+      code: malformed_parameters
+      message: The published_before parameter(s) are incorrectly formatted.
+problems:
+  - code: malformed_parameters
+    status: 400
+    title: Malformed parameters
+    description: >-
+      Validation of parameters failed. The failed parameters are usually shown
+      in the error message.
+    remediation: Ensure GET parameters are URL-encoded and match the documented formats.
+  - code: invalid_api_token
+    status: 401
+    title: Invalid API token
+    description: Invalid API token.
+    remediation: Use the api_token from your account dashboard (https://www.marketaux.com/login).
+  - code: usage_limit_reached
+    status: 402
+    title: Usage limit reached
+    description: >-
+      Usage limit of your plan has been reached. Usage limit and remaining
+      requests can be found on the X-UsageLimit-Limit header.
+    remediation: Upgrade your plan or wait for the daily usage window to reset.
+  - code: endpoint_access_restricted
+    status: 403
+    title: Endpoint access restricted
+    description: Access to the endpoint is not available on your current subscription plan.
+    remediation: >-
+      Entity stats and trending endpoints require the Standard plan or above;
+      upgrade at https://www.marketaux.com/pricing.
+  - code: resource_not_found
+    status: 404
+    title: Resource not found
+    description: Resource could not be found.
+  - code: invalid_api_endpoint
+    status: 404
+    title: Invalid API endpoint
+    description: API route does not exist.
+  - code: rate_limit_reached
+    status: 429
+    title: Rate limit reached
+    description: >-
+      Too many requests in the past 60 seconds. Rate limit and remaining
+      requests can be found on the X-RateLimit-Limit header.
+    remediation: Back off and retry after the 60-second window.
+  - code: server_error
+    status: 500
+    title: Server error
+    description: A server error occured.
+  - code: maintenance_mode
+    status: 503
+    title: Maintenance mode
+    description: The service is currently under maintenance.

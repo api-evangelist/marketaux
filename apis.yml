@@ -1,32 +1,115 @@
 aid: marketaux
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+    - plans
+    - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/marketaux.png
 name: MarketAux
-description: "Live stock market news with tagged tickers + sentiment and stats JSON API"
+description: >-
+  Marketaux is a global financial and stock market news API that pairs every
+  article with entity recognition and sentiment analysis. It aggregates 5,000+
+  news sources in 30+ languages, tracking 200,000+ entities — equities,
+  indices, ETFs, mutual funds, currencies, and cryptocurrencies — across 80+
+  markets. Beyond filtered news feeds, it provides entity statistics time
+  series, aggregations, and trending-entity endpoints for identifying the best
+  and worst performing entities in the news, with a free self-serve tier.
 url: https://www.marketaux.com/
 specificationVersion: '0.20'
 created: '2026-05-28'
-modified: '2026-05-28'
+modified: '2026-07-22'
 x-source: public-apis/public-apis
 x-category: "News"
 x-tier: 3
 x-tier-reason: bulk-registered-from-public-apis
 tags:
   - News
+  - Financial News
+  - Stock Market
+  - Sentiment Analysis
+  - Market Data
+  - Entity Recognition
   - Public APIs
 apis:
-  - name: MarketAux
-    description: "Live stock market news with tagged tickers + sentiment and stats JSON API"
-    humanURL: https://www.marketaux.com/
-    baseURL: https://www.marketaux.com/
+  - name: MarketAux API
+    description: >-
+      Live stock market news with tagged tickers, per-entity sentiment and
+      match scores, entity statistics and trending endpoints, delivered as a
+      GET-only JSON API authenticated with an api_token query parameter.
+    humanURL: https://www.marketaux.com/documentation
+    baseURL: https://api.marketaux.com/v1
     tags:
       - News
+      - Financial News
+      - Sentiment Analysis
     properties:
       - type: Documentation
-        url: https://www.marketaux.com/
+        url: https://www.marketaux.com/documentation
+      - type: OpenAPI
+        url: openapi/marketaux-openapi.yml
+      - type: Overlay
+        url: overlays/marketaux-openapi-overlay.yaml
+      - type: MCPServer
+        url: mcp/marketaux-mcp.yml
 common:
-  - type: DomainSecurity
-    url: security/marketaux-domain-security.yml
   - type: Website
     url: https://www.marketaux.com/
+  - type: Documentation
+    url: https://www.marketaux.com/documentation
+  - type: APIReference
+    url: https://www.marketaux.com/documentation
+  - type: GettingStarted
+    url: https://www.marketaux.com/documentation#introduction
+  - type: Pricing
+    url: https://www.marketaux.com/pricing
+  - type: SignUp
+    url: https://www.marketaux.com/register
+  - type: Login
+    url: https://www.marketaux.com/login
+  - type: Support
+    url: https://www.marketaux.com/contact
+  - type: FAQ
+    url: https://www.marketaux.com/faq
+  - type: TermsOfService
+    url: https://www.marketaux.com/tos
+  - type: PrivacyPolicy
+    url: https://www.marketaux.com/privacy
+  - type: Authentication
+    url: authentication/marketaux-authentication.yml
+  - type: Plans
+    url: plans/marketaux-plans.yml
+  - type: RateLimits
+    url: rate-limits/marketaux-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/marketaux-problem-types.yml
+  - type: Conventions
+    url: conventions/marketaux-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/marketaux-lifecycle.yml
+  - type: Conformance
+    url: conformance/marketaux-conformance.yml
+  - type: DataModel
+    url: data-model/marketaux-data-model.yml
+  - type: Examples
+    url: examples/marketaux-examples.yml
+  - type: Packages
+    url: packages/marketaux-packages.yml
+  - type: WellKnown
+    url: well-known/marketaux-well-known.yml
+  - type: LLMsTxt
+    url: llms/marketaux-llms.txt
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: DomainSecurity
+    url: security/marketaux-domain-security.yml
   - type: PublicAPIsListing
     url: https://github.com/public-apis/public-apis
 maintainers:

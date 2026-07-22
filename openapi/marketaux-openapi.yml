@@ -1,0 +1,1084 @@
+x-provenance:
+  generated: '2026-07-22'
+  method: generated
+  source: https://www.marketaux.com/documentation
+  note: >-
+    Marketaux publishes no machine-readable API definition (probes of
+    www.marketaux.com and api.marketaux.com for /openapi.json, /openapi.yaml,
+    /swagger.json, /v1/openapi.json and /api-docs all returned 404 on
+    2026-07-22). This OpenAPI was generated faithfully from the published HTML
+    API documentation; every path, parameter, response field, and error code
+    below is documented at the source URL. Example values are taken verbatim
+    from the documentation.
+openapi: 3.1.0
+info:
+  title: Marketaux API
+  description: >-
+    Global financial and stock market news API. Generate news feeds filtered by
+    entity symbol, type, exchange, industry, country and more, with per-entity
+    sentiment and match scores. Covers 5,000+ news sources globally in 30+
+    languages, tracking 200,000+ entities across 80+ markets. Also provides
+    entity statistics (time series and aggregations) and trending-entity
+    endpoints for charting the best and worst performing entities in the news.
+  version: v1
+  termsOfService: https://www.marketaux.com/tos
+  contact:
+    url: https://www.marketaux.com/contact
+externalDocs:
+  description: Marketaux API documentation
+  url: https://www.marketaux.com/documentation
+servers:
+  - url: https://api.marketaux.com
+security:
+  - apiToken: []
+tags:
+  - name: News
+    description: Financial and market news feeds, similar-article lookup, and article retrieval by UUID.
+  - name: Entities
+    description: Entity statistics, trending entities, entity search, and entity metadata.
+  - name: Sources
+    description: News source metadata usable in news feed filters.
+paths:
+  /v1/news/all:
+    get:
+      operationId: getAllNews
+      tags: [News]
+      summary: Finance and market news
+      description: >-
+        Get all the latest global financial news and filter by entities
+        identified within articles to build concise news feeds. Also provided is
+        analysis of each entity identified in articles. Not every article may
+        have entities identified; use must_have_entities or entity parameters
+        such as symbols or exchanges for more concise results. Available on all
+        plans.
+      parameters:
+        - $ref: '#/components/parameters/symbols'
+        - $ref: '#/components/parameters/entityTypes'
+        - $ref: '#/components/parameters/industries'
+        - $ref: '#/components/parameters/countries'
+        - $ref: '#/components/parameters/sentimentGte'
+        - $ref: '#/components/parameters/sentimentLte'
+        - name: min_match_score
+          in: query
+          description: Find all articles with entities with a match_score greater than or equal to min_match_score.
+          schema:
+            type: number
+        - $ref: '#/components/parameters/filterEntities'
+        - $ref: '#/components/parameters/mustHaveEntities'
+        - $ref: '#/components/parameters/groupSimilar'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/domains'
+        - $ref: '#/components/parameters/excludeDomains'
+        - $ref: '#/components/parameters/sourceIds'
+        - $ref: '#/components/parameters/excludeSourceIds'
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/publishedBefore'
+        - $ref: '#/components/parameters/publishedAfter'
+        - $ref: '#/components/parameters/publishedOn'
+        - name: sort
+          in: query
+          description: >-
+            Sort by published_on, entity_match_score, entity_sentiment_score or
+            relevance_score (relevance_score only available when used in
+            conjunction with search). Default is published_at unless search is
+            used, in which case relevance_score is used.
+          schema:
+            type: string
+            enum: [published_on, entity_match_score, entity_sentiment_score, relevance_score]
+        - name: sort_order
+          in: query
+          description: >-
+            Sort order of the sort parameter. Can only be used with sort =
+            entity_match_score or entity_sentiment_score. Default desc.
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: News articles matching the query, with identified entities and sentiment analysis.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NewsArticle'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/news/similar/{uuid}:
+    get:
+      operationId: getSimilarNews
+      tags: [News]
+      summary: Similar news
+      description: >-
+        Find similar stories to a specific article based on its UUID. Available
+        on all plans.
+      parameters:
+        - $ref: '#/components/parameters/uuidPath'
+        - $ref: '#/components/parameters/symbols'
+        - $ref: '#/components/parameters/entityTypes'
+        - $ref: '#/components/parameters/industries'
+        - $ref: '#/components/parameters/countries'
+        - $ref: '#/components/parameters/sentimentGte'
+        - $ref: '#/components/parameters/sentimentLte'
+        - $ref: '#/components/parameters/filterEntities'
+        - $ref: '#/components/parameters/mustHaveEntities'
+        - $ref: '#/components/parameters/groupSimilar'
+        - $ref: '#/components/parameters/domains'
+        - $ref: '#/components/parameters/excludeDomains'
+        - $ref: '#/components/parameters/sourceIds'
+        - $ref: '#/components/parameters/excludeSourceIds'
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/publishedBefore'
+        - $ref: '#/components/parameters/publishedAfter'
+        - $ref: '#/components/parameters/publishedOn'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: Articles similar to the referenced article, ranked by relevance_score.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NewsArticle'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '404': { $ref: '#/components/responses/ResourceNotFound' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/news/uuid/{uuid}:
+    get:
+      operationId: getNewsByUuid
+      tags: [News]
+      summary: News by UUID
+      description: >-
+        Find a specific article by the UUID returned by the search endpoints.
+        Useful for storing the UUID and returning the article later. Available
+        on all plans.
+      parameters:
+        - $ref: '#/components/parameters/uuidPath'
+      responses:
+        '200':
+          description: The requested news article.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsArticle'
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '404': { $ref: '#/components/responses/ResourceNotFound' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/news/sources:
+    get:
+      operationId: getNewsSources
+      tags: [Sources]
+      summary: News sources
+      description: >-
+        View sources which can be used in other API requests (domains and
+        source_ids filters). The limit is 50 for all requests. Available on all
+        plans.
+      parameters:
+        - name: distinct_domain
+          in: query
+          description: Group distinct domains from sources. This will make source_id null.
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: News sources.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NewsSource'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/stats/intraday:
+    get:
+      operationId: getEntityStatsIntraday
+      tags: [Entities]
+      summary: Entity stats (time series)
+      description: >-
+        Get an intraday view of how well entities performed over different
+        intervals. Find the best or worst performing entities broken down to
+        every minute, hour, day, week, month, quarter or year. Useful for
+        comparing entities and creating graphs and charts. Available on
+        Standard plans and above.
+      parameters:
+        - name: interval
+          in: query
+          description: >-
+            The interval of the time series. Maximum time frame per interval
+            (from the published_before date): minute = 7 days, hour = 1 month,
+            day = 3 years, week = 5 years, month = 5 years, quarter = 10 years,
+            year = 10 years. If the time frame is exceeded the maximum is
+            applied without error.
+          schema:
+            type: string
+            enum: [minute, hour, day, week, month, quarter, year]
+            default: day
+        - $ref: '#/components/parameters/groupBy'
+        - $ref: '#/components/parameters/minDocCount'
+        - $ref: '#/components/parameters/symbols'
+        - $ref: '#/components/parameters/entityTypes'
+        - $ref: '#/components/parameters/industries'
+        - $ref: '#/components/parameters/countries'
+        - $ref: '#/components/parameters/sentimentAvgGte'
+        - $ref: '#/components/parameters/sentimentAvgLte'
+        - $ref: '#/components/parameters/sentimentGte'
+        - $ref: '#/components/parameters/sentimentLte'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/domains'
+        - $ref: '#/components/parameters/excludeDomains'
+        - $ref: '#/components/parameters/sourceIds'
+        - $ref: '#/components/parameters/excludeSourceIds'
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/publishedBefore'
+        - $ref: '#/components/parameters/publishedAfter'
+        - $ref: '#/components/parameters/publishedOn'
+        - $ref: '#/components/parameters/statsSort'
+        - $ref: '#/components/parameters/statsSortOrder'
+        - name: date_order
+          in: query
+          description: Ordering of the date keys. Default desc.
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Time-series buckets of entity document counts and average sentiment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityStatsBucket'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '403': { $ref: '#/components/responses/EndpointAccessRestricted' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/stats/aggregation:
+    get:
+      operationId: getEntityStatsAggregation
+      tags: [Entities]
+      summary: Entity stats (aggregation)
+      description: >-
+        Similar to the entity stats time series endpoint, this returns an
+        aggregation of entities for a single time frame rather than being
+        broken down by date. Useful to find the best or worst performing
+        stocks. Available on Standard plans and above.
+      parameters:
+        - $ref: '#/components/parameters/groupBy'
+        - $ref: '#/components/parameters/minDocCount'
+        - $ref: '#/components/parameters/symbols'
+        - $ref: '#/components/parameters/entityTypes'
+        - $ref: '#/components/parameters/industries'
+        - $ref: '#/components/parameters/countries'
+        - $ref: '#/components/parameters/sentimentAvgGte'
+        - $ref: '#/components/parameters/sentimentAvgLte'
+        - $ref: '#/components/parameters/sentimentGte'
+        - $ref: '#/components/parameters/sentimentLte'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/domains'
+        - $ref: '#/components/parameters/excludeDomains'
+        - $ref: '#/components/parameters/sourceIds'
+        - $ref: '#/components/parameters/excludeSourceIds'
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/publishedBefore'
+        - $ref: '#/components/parameters/publishedAfter'
+        - $ref: '#/components/parameters/publishedOn'
+        - $ref: '#/components/parameters/statsSort'
+        - $ref: '#/components/parameters/statsSortOrder'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Aggregated entity document counts and average sentiment for a single time frame.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/AggregationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityAggregation'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '403': { $ref: '#/components/responses/EndpointAccessRestricted' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/trending/aggregation:
+    get:
+      operationId: getTrendingEntities
+      tags: [Entities]
+      summary: Trending entities
+      description: >-
+        Identify trending entities. Filter by time frame and more; e.g. find
+        which stocks were trending on a specific day, within the past 24 hours,
+        past 7 days, etc. Available on Standard plans and above.
+      parameters:
+        - $ref: '#/components/parameters/groupBy'
+        - $ref: '#/components/parameters/minDocCount'
+        - $ref: '#/components/parameters/symbols'
+        - $ref: '#/components/parameters/entityTypes'
+        - $ref: '#/components/parameters/industries'
+        - $ref: '#/components/parameters/countries'
+        - $ref: '#/components/parameters/sentimentAvgGte'
+        - $ref: '#/components/parameters/sentimentAvgLte'
+        - $ref: '#/components/parameters/sentimentGte'
+        - $ref: '#/components/parameters/sentimentLte'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/domains'
+        - $ref: '#/components/parameters/excludeDomains'
+        - $ref: '#/components/parameters/sourceIds'
+        - $ref: '#/components/parameters/excludeSourceIds'
+        - $ref: '#/components/parameters/language'
+        - $ref: '#/components/parameters/publishedBefore'
+        - $ref: '#/components/parameters/publishedAfter'
+        - $ref: '#/components/parameters/publishedOn'
+        - $ref: '#/components/parameters/statsSort'
+        - $ref: '#/components/parameters/statsSortOrder'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Trending entities with document counts, average sentiment, and trending score.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/AggregationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrendingEntity'
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '403': { $ref: '#/components/responses/EndpointAccessRestricted' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/search:
+    get:
+      operationId: searchEntities
+      tags: [Entities]
+      summary: Entity search
+      description: >-
+        Search for all entities supported by Marketaux. The limit is 50 for all
+        requests. Available on all plans.
+      parameters:
+        - name: search
+          in: query
+          description: Dynamic search function to find entities.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/symbols'
+        - name: exchanges
+          in: query
+          description: Filter results by specific exchanges. Comma separated list.
+          schema:
+            type: string
+        - name: types
+          in: query
+          description: Filter results by entity types. Comma separated list.
+          schema:
+            type: string
+        - name: industries
+          in: query
+          description: Filter results by industries. Comma separated list.
+          schema:
+            type: string
+        - name: countries
+          in: query
+          description: Filter results by ISO 3166-1 two-letter country code of the exchange. Comma separated list.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: Matching entities.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntitySearchResult'
+              example:
+                meta: { found: 1, returned: 1, limit: 50, page: 1 }
+                data:
+                  - symbol: TSLA
+                    name: Tesla, Inc.
+                    type: equity
+                    industry: Consumer Cyclical
+                    exchange: null
+                    exchange_long: null
+                    country: us
+        '400': { $ref: '#/components/responses/MalformedParameters' }
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/type/list:
+    get:
+      operationId: listEntityTypes
+      tags: [Entities]
+      summary: Entity type list
+      description: Return all supported entity types. Available on all plans.
+      responses:
+        '200':
+          description: Supported entity types.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+              example:
+                data: [equity, index, etf, mutualfund, currency, cryptocurrency]
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+  /v1/entity/industry/list:
+    get:
+      operationId: listEntityIndustries
+      tags: [Entities]
+      summary: Industry list
+      description: Return all supported entity industries. Available on all plans.
+      responses:
+        '200':
+          description: Supported entity industries.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+              example:
+                data: [Technology, Industrials, "N/A", Consumer Cyclical, Healthcare,
+                       Communication Services, Financial Services, Consumer Defensive,
+                       Basic Materials, Real Estate, Energy, Utilities, Financial,
+                       Services, Consumer Goods, Industrial Goods]
+        '401': { $ref: '#/components/responses/InvalidApiToken' }
+        '402': { $ref: '#/components/responses/UsageLimitReached' }
+        '429': { $ref: '#/components/responses/RateLimitReached' }
+        '500': { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/MaintenanceMode' }
+components:
+  securitySchemes:
+    apiToken:
+      type: apiKey
+      in: query
+      name: api_token
+      description: >-
+        Your API token, found on your account dashboard after signing up at
+        https://www.marketaux.com/register. Passed as a GET parameter on every
+        request.
+  parameters:
+    uuidPath:
+      name: uuid
+      in: path
+      required: true
+      description: The unique identifier (UUID) for an article, as returned by the search endpoints.
+      schema:
+        type: string
+        format: uuid
+    symbols:
+      name: symbols
+      in: query
+      description: >-
+        Specify entity symbol(s) which have been identified within the article.
+        Comma separated. Example: symbols=TSLA,AMZN,MSFT
+      schema:
+        type: string
+    entityTypes:
+      name: entity_types
+      in: query
+      description: >-
+        Specify the type of entities identified within the article. Comma
+        separated. Example: entity_types=index,equity
+      schema:
+        type: string
+    industries:
+      name: industries
+      in: query
+      description: >-
+        Specify the industries of entities identified within the article. Comma
+        separated. Example: industries=Technology,Industrials
+      schema:
+        type: string
+    countries:
+      name: countries
+      in: query
+      description: >-
+        Specify the country of the exchange of which entities have been
+        identified within the article. Comma separated. Example: countries=us,ca
+      schema:
+        type: string
+    sentimentGte:
+      name: sentiment_gte
+      in: query
+      description: >-
+        Find all articles with entities with a sentiment_score greater than or
+        equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 =
+        positive, below 0 = negative.
+      schema:
+        type: number
+        minimum: -1
+        maximum: 1
+    sentimentLte:
+      name: sentiment_lte
+      in: query
+      description: Find all articles with entities with a sentiment_score less than or equal to x.
+      schema:
+        type: number
+        minimum: -1
+        maximum: 1
+    sentimentAvgGte:
+      name: sentiment_avg_gte
+      in: query
+      description: Refine results to entities with an overall sentiment_avg greater than or equal to x.
+      schema:
+        type: number
+        minimum: -1
+        maximum: 1
+    sentimentAvgLte:
+      name: sentiment_avg_lte
+      in: query
+      description: Refine results to entities with an overall sentiment_avg less than or equal to x.
+      schema:
+        type: number
+        minimum: -1
+        maximum: 1
+    filterEntities:
+      name: filter_entities
+      in: query
+      description: >-
+        By default all entities for each article are returned; set to true to
+        return only the entities relevant to your query with each article.
+        Default false.
+      schema:
+        type: boolean
+        default: false
+    mustHaveEntities:
+      name: must_have_entities
+      in: query
+      description: >-
+        Set to true to ensure that at least one entity has been identified
+        within the article. Default false.
+      schema:
+        type: boolean
+        default: false
+    groupSimilar:
+      name: group_similar
+      in: query
+      description: >-
+        Group similar articles to avoid displaying multiple articles on the
+        same topic/subject. Default true.
+      schema:
+        type: boolean
+        default: true
+    search:
+      name: search
+      in: query
+      description: >-
+        Full-text search over article body and title. Supports advanced query
+        syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix),
+        parentheses (precedence); escape literals with a backslash. Example:
+        "ipo" -nyse
+      schema:
+        type: string
+    domains:
+      name: domains
+      in: query
+      description: >-
+        Comma separated list of domains to include. Obtain domains from the
+        sources endpoint. Example: adweek.com,adage.com
+      schema:
+        type: string
+    excludeDomains:
+      name: exclude_domains
+      in: query
+      description: Comma separated list of domains to exclude.
+      schema:
+        type: string
+    sourceIds:
+      name: source_ids
+      in: query
+      description: >-
+        Comma separated list of source_ids to include. Obtain source_ids from
+        the sources endpoint. Example: adweek.com-1,adage.com-1
+      schema:
+        type: string
+    excludeSourceIds:
+      name: exclude_source_ids
+      in: query
+      description: Comma separated list of source_ids to exclude.
+      schema:
+        type: string
+    language:
+      name: language
+      in: query
+      description: >-
+        Comma separated list of languages to include (e.g. en,es). Default is
+        all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa,
+        fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro,
+        ru, sk, sv, ta, th, tr, uk, vi, zh.
+      schema:
+        type: string
+    publishedBefore:
+      name: published_before
+      in: query
+      description: >-
+        Find all articles published before the specified date. Supported
+        formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All
+        dates are UTC.
+      schema:
+        type: string
+    publishedAfter:
+      name: published_after
+      in: query
+      description: >-
+        Find all articles published after the specified date. Supported
+        formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All
+        dates are UTC.
+      schema:
+        type: string
+    publishedOn:
+      name: published_on
+      in: query
+      description: 'Find all articles published on the specified date. Supported format: Y-m-d.'
+      schema:
+        type: string
+    groupBy:
+      name: group_by
+      in: query
+      description: Group results by symbol, exchange, industry or country. Default symbol.
+      schema:
+        type: string
+        enum: [symbol, exchange, industry, country]
+        default: symbol
+    minDocCount:
+      name: min_doc_count
+      in: query
+      description: >-
+        The minimum number of total_documents an entity should be identified
+        within to be returned with the results.
+      schema:
+        type: integer
+    statsSort:
+      name: sort
+      in: query
+      description: Sort by total_documents or sentiment_avg. Default total_documents.
+      schema:
+        type: string
+        enum: [total_documents, sentiment_avg]
+        default: total_documents
+    statsSortOrder:
+      name: sort_order
+      in: query
+      description: Sort order of the sort parameter. Default desc.
+      schema:
+        type: string
+        enum: [desc, asc]
+        default: desc
+    limit:
+      name: limit
+      in: query
+      description: >-
+        Number of results to return. The maximum limit is based on your plan;
+        the default limit is the maximum specified for your plan.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: >-
+        Paginate through the result set. Default 1. The max result set cannot
+        exceed 20,000 (e.g. with limit 50 the max page is 400).
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    PaginationMeta:
+      type: object
+      description: Pagination metadata returned on list endpoints.
+      properties:
+        found:
+          type: integer
+          description: The number of results found for the request.
+        returned:
+          type: integer
+          description: >-
+            The number of results returned on the page. If lower than limit,
+            there are no more results after this page.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+        page:
+          type: integer
+          description: The page number based on the page parameter.
+    AggregationMeta:
+      type: object
+      description: Metadata returned on aggregation endpoints.
+      properties:
+        returned:
+          type: integer
+          description: The number of entities returned.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+    NewsArticle:
+      type: object
+      description: A news article with identified entities and sentiment analysis.
+      properties:
+        uuid:
+          type: string
+          description: The unique identifier for an article in the Marketaux system.
+        title:
+          type: string
+          description: The article title.
+        description:
+          type: string
+          description: The article meta description.
+        keywords:
+          type: string
+          description: The article meta keywords.
+        snippet:
+          type: string
+          description: A short snippet of the article body.
+        url:
+          type: string
+          description: The URL to the article.
+        image_url:
+          type: string
+          description: The URL to the article image.
+        language:
+          type: string
+          description: The language of the source.
+        published_at:
+          type: string
+          description: The datetime the article was published (UTC).
+        source:
+          type: string
+          description: The domain of the source.
+        relevance_score:
+          type: [number, 'null']
+          description: >-
+            Relevance score based on the search parameter; null when the search
+            parameter is not used.
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+        similar:
+          type: array
+          description: Array of news articles which are very similar to the main article.
+          items:
+            $ref: '#/components/schemas/NewsArticle'
+      example:
+        uuid: 70cb577e-c2dd-4dde-b501-f713823a4939
+        title: Trump wins 2024, markets surge globally
+        description: Global markets experience a significant surge following Trump's victory in the 2024 election.
+        keywords: ''
+        snippet: Donald Trump has won the 2024 presidential election...
+        url: https://www.killerstartups.com/trump-wins-2024-markets-surge-globally/
+        image_url: https://images.killerstartups.com/wp-content/uploads/2024/11/Trump-Wins.jpg
+        language: en
+        published_at: '2024-11-08T01:24:00.000000Z'
+        source: killerstartups.com
+        relevance_score: null
+        entities:
+          - symbol: TSLA
+            name: Tesla, Inc.
+            exchange: null
+            exchange_long: null
+            country: us
+            type: equity
+            industry: Consumer Cyclical
+            match_score: 12.133104
+            sentiment_score: 0.7783
+            highlights:
+              - highlight: '., majority-owned by Trump, and Tesl[+253 characters]'
+                sentiment: 0.7783
+                highlighted_in: main_text
+        similar: []
+    Entity:
+      type: object
+      description: An entity identified within an article, with match and sentiment scores.
+      properties:
+        symbol:
+          type: string
+          description: Symbol of the identified entity.
+        name:
+          type: string
+          description: Name of the identified entity.
+        exchange:
+          type: [string, 'null']
+          description: Exchange identifier of the identified entity.
+        exchange_long:
+          type: [string, 'null']
+          description: Exchange name of the identified entity.
+        country:
+          type: string
+          description: Exchange country of the identified entity.
+        type:
+          type: string
+          description: Type of the identified entity (equity, index, etf, mutualfund, currency, cryptocurrency).
+        industry:
+          type: string
+          description: Industry of the identified entity.
+        match_score:
+          type: number
+          description: The overall strength of the matching for the identified entity.
+        sentiment_score:
+          type: number
+          description: Average sentiment of all highlighted text found for the identified entity.
+        highlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Highlight'
+    Highlight:
+      type: object
+      description: A snippet of article text where an entity was identified.
+      properties:
+        highlight:
+          type: string
+          description: Snippet of text from the article where the entity has been identified.
+        sentiment:
+          type: number
+          description: The sentiment of the highlighted text.
+        highlighted_in:
+          type: string
+          enum: [title, main_text]
+          description: Where the highlight was found.
+    NewsSource:
+      type: object
+      description: A news source feed.
+      properties:
+        source_id:
+          type: [string, 'null']
+          description: >-
+            The unique ID of the source feed, usable in the source_ids and
+            exclude_source_ids parameters. Null when distinct_domain=true.
+        domain:
+          type: string
+          description: The domain of the source, usable in the domains and exclude_domains parameters.
+        language:
+          type: string
+          description: The source language.
+      example:
+        source_id: adweek.com-1
+        domain: adweek.com
+        language: en
+    EntityAggregation:
+      type: object
+      description: Aggregated document count and sentiment for a grouped key.
+      properties:
+        key:
+          type: string
+          description: The key based on the group_by parameter (symbol, exchange, industry or country).
+        total_documents:
+          type: integer
+          description: Total number of documents identified for the key based on the query parameters.
+        sentiment_avg:
+          type: [number, 'null']
+          description: Average sentiment of the key based on the query parameters.
+      example:
+        key: TSLA
+        total_documents: 14
+        sentiment_avg: 0.388841356283852
+    TrendingEntity:
+      allOf:
+        - $ref: '#/components/schemas/EntityAggregation'
+        - type: object
+          properties:
+            score:
+              type: number
+              description: The relevance score for the trending entity.
+      example:
+        key: NVDA
+        total_documents: 22
+        sentiment_avg: 0.436025815253908
+        score: 3.7920454395721324
+    EntityStatsBucket:
+      type: object
+      description: One time-series bucket of entity statistics.
+      properties:
+        date:
+          type: string
+          description: Date of the time series data.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityAggregation'
+      example:
+        date: '2024-11-10T00:00:00.000Z'
+        data:
+          - key: TSLA
+            total_documents: 14
+            sentiment_avg: 0.388841356283852
+    EntitySearchResult:
+      type: object
+      description: An entity supported by Marketaux.
+      properties:
+        symbol:
+          type: string
+          description: Unique entity symbol (or ticker).
+        name:
+          type: string
+          description: Entity name.
+        type:
+          type: string
+          description: The entity type.
+        industry:
+          type: string
+          description: The entity industry.
+        exchange:
+          type: [string, 'null']
+          description: The exchange identifier.
+        exchange_long:
+          type: [string, 'null']
+          description: The exchange name.
+        country:
+          type: string
+          description: >-
+            The ISO 3166-1 two-letter country code of the exchange locale ('eu'
+            and 'global' are also included).
+    Error:
+      type: object
+      description: Marketaux error envelope.
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+      example:
+        error:
+          code: malformed_parameters
+          message: The published_before parameter(s) are incorrectly formatted.
+  responses:
+    MalformedParameters:
+      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidApiToken:
+      description: 'invalid_api_token: Invalid API token.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: invalid_api_token
+              message: An invalid API token was supplied.
+    UsageLimitReached:
+      description: >-
+        usage_limit_reached: Usage limit of your plan has been reached. Usage
+        limit and remaining requests can be found on the X-UsageLimit-Limit
+        header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    EndpointAccessRestricted:
+      description: 'endpoint_access_restricted: Access to the endpoint is not available on your current subscription plan.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ResourceNotFound:
+      description: 'resource_not_found: Resource could not be found (also invalid_api_endpoint when the API route does not exist).'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimitReached:
+      description: >-
+        rate_limit_reached: Too many requests in the past 60 seconds. Rate
+        limit and remaining requests can be found on the X-RateLimit-Limit
+        header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

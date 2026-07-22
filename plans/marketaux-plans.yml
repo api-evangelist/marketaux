@@ -1,0 +1,141 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: MarketAux
+providerId: marketaux
+generated: '2026-07-22'
+method: searched
+created: '2026-07-22'
+modified: '2026-07-22'
+tags:
+  - News
+  - Financial News
+  - Market Data
+description: >-
+  Marketaux is subscription-tiered with a free tier. Tiers scale on daily
+  request quota, articles returned per news request, and entities returned per
+  stat request; the entity stats and trending endpoints require Standard or
+  above. Annual billing carries a 20% discount. Custom plans (custom daily
+  requests, articles per request, and SLA) are available on request.
+sources:
+  - https://www.marketaux.com/pricing
+plans:
+  - id: marketaux-free
+    name: Free
+    type: free
+    price: $0.00/mo
+    description: 100 requests daily, 3 articles per news request, 0 entities per stat request, full metadata access.
+    entries:
+      - label: Daily API requests
+        name: requests_daily
+        type: metered
+        metric: request
+        limit: 100
+        timeFrame: day
+      - label: Articles per news request
+        name: articles_per_request
+        type: limit
+        metric: article
+        limit: 3
+        timeFrame: request
+  - id: marketaux-basic
+    name: Basic
+    type: subscription
+    price: $29.00/mo ($24.00/mo billed annually)
+    description: 2,500 requests daily, 20 articles per news request, 0 entities per stat request.
+    entries:
+      - label: Daily API requests
+        name: requests_daily
+        type: metered
+        metric: request
+        limit: 2500
+        timeFrame: day
+      - label: Articles per news request
+        name: articles_per_request
+        type: limit
+        metric: article
+        limit: 20
+        timeFrame: request
+  - id: marketaux-standard
+    name: Standard
+    type: subscription
+    price: $49.00/mo ($41.00/mo billed annually)
+    description: >-
+      10,000 requests daily, 50 articles per news request, 20 entities per stat
+      request. First tier with access to the entity stats and trending
+      endpoints.
+    entries:
+      - label: Daily API requests
+        name: requests_daily
+        type: metered
+        metric: request
+        limit: 10000
+        timeFrame: day
+      - label: Articles per news request
+        name: articles_per_request
+        type: limit
+        metric: article
+        limit: 50
+        timeFrame: request
+      - label: Entities per stat request
+        name: entities_per_stat_request
+        type: limit
+        metric: entity
+        limit: 20
+        timeFrame: request
+  - id: marketaux-pro
+    name: Pro
+    type: subscription
+    price: $99.00/mo ($83.00/mo billed annually)
+    description: 25,000 requests daily, 100 articles per news request, 100 entities per stat request.
+    entries:
+      - label: Daily API requests
+        name: requests_daily
+        type: metered
+        metric: request
+        limit: 25000
+        timeFrame: day
+      - label: Articles per news request
+        name: articles_per_request
+        type: limit
+        metric: article
+        limit: 100
+        timeFrame: request
+      - label: Entities per stat request
+        name: entities_per_stat_request
+        type: limit
+        metric: entity
+        limit: 100
+        timeFrame: request
+  - id: marketaux-pro-50k
+    name: Pro 50K
+    type: subscription
+    price: $199.00/mo ($166.00/mo billed annually)
+    description: 50,000 requests daily, 100 articles per news request, 100 entities per stat request.
+    entries:
+      - label: Daily API requests
+        name: requests_daily
+        type: metered
+        metric: request
+        limit: 50000
+        timeFrame: day
+      - label: Articles per news request
+        name: articles_per_request
+        type: limit
+        metric: article
+        limit: 100
+        timeFrame: request
+      - label: Entities per stat request
+        name: entities_per_stat_request
+        type: limit
+        metric: entity
+        limit: 100
+        timeFrame: request
+  - id: marketaux-custom
+    name: Custom
+    type: custom
+    price: Request quote
+    description: >-
+      Custom daily requests, custom articles per request, and custom SLA,
+      negotiated directly with Marketaux.
+plan_count: 6

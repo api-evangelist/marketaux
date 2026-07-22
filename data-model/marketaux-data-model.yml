@@ -1,0 +1,28 @@
+generated: '2026-07-22'
+method: derived
+source: >-
+  Derived from openapi/marketaux-openapi.yml (schema $ref links and reference
+  fields) and the response-object tables at
+  https://www.marketaux.com/documentation.
+docs: https://www.marketaux.com/documentation
+notation: >-
+  relationships use has_one / has_many / belongs_to with the reference field
+  name; direction is from the entity that owns the reference.
+
+entities:
+  - {name: NewsArticle, id_field: uuid, domain: news, description: A news article with title, snippet, source, language, publish time, and identified entities.}
+  - {name: Entity, id_field: symbol, domain: entities, description: "A tracked financial entity (equity, index, etf, mutualfund, currency, cryptocurrency) identified within articles, with match and sentiment scores."}
+  - {name: Highlight, id_field: null, domain: entities, description: A snippet of article text (title or main_text) where an entity was identified, with its sentiment.}
+  - {name: NewsSource, id_field: source_id, domain: sources, description: A source feed (domain + language) usable in news filters.}
+  - {name: EntityAggregation, id_field: key, domain: stats, description: Aggregated document count and average sentiment for a group_by key (symbol/exchange/industry/country).}
+  - {name: EntityStatsBucket, id_field: date, domain: stats, description: A dated time-series bucket of EntityAggregation rows.}
+  - {name: TrendingEntity, id_field: key, domain: stats, description: An EntityAggregation with a trending relevance score.}
+
+relationships:
+  - {from: NewsArticle, to: Entity, kind: has_many, via: entities}
+  - {from: NewsArticle, to: NewsArticle, kind: has_many, via: similar}
+  - {from: NewsArticle, to: NewsSource, kind: belongs_to, via: source}
+  - {from: Entity, to: Highlight, kind: has_many, via: highlights}
+  - {from: EntityStatsBucket, to: EntityAggregation, kind: has_many, via: data}
+  - {from: EntityAggregation, to: Entity, kind: belongs_to, via: key}
+  - {from: TrendingEntity, to: Entity, kind: belongs_to, via: key}

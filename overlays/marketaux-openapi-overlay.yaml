@@ -1,0 +1,34 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Marketaux API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-07-22'
+  method: generated
+  source: openapi/marketaux-openapi.yml
+extends: openapi/marketaux-openapi.yml
+actions:
+  - target: $.info
+    description: Tag the spec with API Evangelist catalog identity and provenance.
+    update:
+      x-apievangelist-provider: marketaux
+      x-apievangelist-repo: https://github.com/api-evangelist/marketaux
+      x-apievangelist-generated-from-docs: https://www.marketaux.com/documentation
+  - target: $.paths['/v1/entity/stats/intraday'].get
+    description: Flag plan gating so agents fail gracefully on 403.
+    update:
+      x-plan-required: Standard and above
+  - target: $.paths['/v1/entity/stats/aggregation'].get
+    description: Flag plan gating so agents fail gracefully on 403.
+    update:
+      x-plan-required: Standard and above
+  - target: $.paths['/v1/entity/trending/aggregation'].get
+    description: Flag plan gating so agents fail gracefully on 403.
+    update:
+      x-plan-required: Standard and above
+  - target: $.paths['/v1/news/all'].get
+    description: Cross-link the artifacts that document cross-cutting behavior.
+    update:
+      x-conventions: conventions/marketaux-conventions.yml
+      x-error-catalog: errors/marketaux-problem-types.yml
+      x-rate-limits: rate-limits/marketaux-rate-limits.yml
