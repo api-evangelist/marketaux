@@ -1,0 +1,900 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Marketaux API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_token",
+      "value": "{{api_token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "News",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Finance and market news",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/news/all",
+            "params": [
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "entity_types",
+                "value": "",
+                "type": "query",
+                "description": "Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity"
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials"
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca"
+              },
+              {
+                "name": "sentiment_gte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative."
+              },
+              {
+                "name": "sentiment_lte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score less than or equal to x."
+              },
+              {
+                "name": "min_match_score",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a match_score greater than or equal to min_match_score."
+              },
+              {
+                "name": "filter_entities",
+                "value": "",
+                "type": "query",
+                "description": "By default all entities for each article are returned; set to true to return only the entities relevant to your query with each article. Default false."
+              },
+              {
+                "name": "must_have_entities",
+                "value": "",
+                "type": "query",
+                "description": "Set to true to ensure that at least one entity has been identified within the article. Default false."
+              },
+              {
+                "name": "group_similar",
+                "value": "",
+                "type": "query",
+                "description": "Group similar articles to avoid displaying multiple articles on the same topic/subject. Default true."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: \"ipo\" -nyse"
+              },
+              {
+                "name": "domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com"
+              },
+              {
+                "name": "exclude_domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to exclude."
+              },
+              {
+                "name": "source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1"
+              },
+              {
+                "name": "exclude_source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to exclude."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "published_before",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published before the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_after",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published after the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_on",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published on the specified date. Supported format: Y-m-d."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort by published_on, entity_match_score, entity_sentiment_score or relevance_score (relevance_score only available when used in conjunction with search). Default is published_at unless search is used, in which case relevance_score is used."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order of the sort parameter. Can only be used with sort = entity_match_score or entity_sentiment_score. Default desc."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400)."
+              }
+            ]
+          },
+          "docs": "Get all the latest global financial news and filter by entities identified within articles to build concise news feeds. Also provided is analysis of each entity identified in articles. Not every article may have entities identified; use must_have_entities or entity parameters such as symbols or exchanges for more concise results. Available on all plans."
+        },
+        {
+          "info": {
+            "name": "Similar news",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/news/similar/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier (UUID) for an article, as returned by the search endpoints."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "entity_types",
+                "value": "",
+                "type": "query",
+                "description": "Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity"
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials"
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca"
+              },
+              {
+                "name": "sentiment_gte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative."
+              },
+              {
+                "name": "sentiment_lte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score less than or equal to x."
+              },
+              {
+                "name": "filter_entities",
+                "value": "",
+                "type": "query",
+                "description": "By default all entities for each article are returned; set to true to return only the entities relevant to your query with each article. Default false."
+              },
+              {
+                "name": "must_have_entities",
+                "value": "",
+                "type": "query",
+                "description": "Set to true to ensure that at least one entity has been identified within the article. Default false."
+              },
+              {
+                "name": "group_similar",
+                "value": "",
+                "type": "query",
+                "description": "Group similar articles to avoid displaying multiple articles on the same topic/subject. Default true."
+              },
+              {
+                "name": "domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com"
+              },
+              {
+                "name": "exclude_domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to exclude."
+              },
+              {
+                "name": "source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1"
+              },
+              {
+                "name": "exclude_source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to exclude."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "published_before",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published before the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_after",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published after the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_on",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published on the specified date. Supported format: Y-m-d."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400)."
+              }
+            ]
+          },
+          "docs": "Find similar stories to a specific article based on its UUID. Available on all plans."
+        },
+        {
+          "info": {
+            "name": "News by UUID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/news/uuid/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier (UUID) for an article, as returned by the search endpoints."
+              }
+            ]
+          },
+          "docs": "Find a specific article by the UUID returned by the search endpoints. Useful for storing the UUID and returning the article later. Available on all plans."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sources",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "News sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/news/sources",
+            "params": [
+              {
+                "name": "distinct_domain",
+                "value": "",
+                "type": "query",
+                "description": "Group distinct domains from sources. This will make source_id null."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400)."
+              }
+            ]
+          },
+          "docs": "View sources which can be used in other API requests (domains and source_ids filters). The limit is 50 for all requests. Available on all plans."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Entities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Entity stats (time series)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/stats/intraday",
+            "params": [
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "The interval of the time series. Maximum time frame per interval (from the published_before date): minute = 7 days, hour = 1 month, day = 3 years, week = 5 years, month = 5 years, quarter = 10 years, year = 10 years. If the time frame is exceeded the maximum is applied without error."
+              },
+              {
+                "name": "group_by",
+                "value": "",
+                "type": "query",
+                "description": "Group results by symbol, exchange, industry or country. Default symbol."
+              },
+              {
+                "name": "min_doc_count",
+                "value": "",
+                "type": "query",
+                "description": "The minimum number of total_documents an entity should be identified within to be returned with the results."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "entity_types",
+                "value": "",
+                "type": "query",
+                "description": "Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity"
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials"
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca"
+              },
+              {
+                "name": "sentiment_avg_gte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg greater than or equal to x."
+              },
+              {
+                "name": "sentiment_avg_lte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg less than or equal to x."
+              },
+              {
+                "name": "sentiment_gte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative."
+              },
+              {
+                "name": "sentiment_lte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score less than or equal to x."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: \"ipo\" -nyse"
+              },
+              {
+                "name": "domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com"
+              },
+              {
+                "name": "exclude_domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to exclude."
+              },
+              {
+                "name": "source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1"
+              },
+              {
+                "name": "exclude_source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to exclude."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "published_before",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published before the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_after",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published after the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_on",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published on the specified date. Supported format: Y-m-d."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort by total_documents or sentiment_avg. Default total_documents."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order of the sort parameter. Default desc."
+              },
+              {
+                "name": "date_order",
+                "value": "",
+                "type": "query",
+                "description": "Ordering of the date keys. Default desc."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan."
+              }
+            ]
+          },
+          "docs": "Get an intraday view of how well entities performed over different intervals. Find the best or worst performing entities broken down to every minute, hour, day, week, month, quarter or year. Useful for comparing entities and creating graphs and charts. Available on Standard plans and above."
+        },
+        {
+          "info": {
+            "name": "Entity stats (aggregation)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/stats/aggregation",
+            "params": [
+              {
+                "name": "group_by",
+                "value": "",
+                "type": "query",
+                "description": "Group results by symbol, exchange, industry or country. Default symbol."
+              },
+              {
+                "name": "min_doc_count",
+                "value": "",
+                "type": "query",
+                "description": "The minimum number of total_documents an entity should be identified within to be returned with the results."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "entity_types",
+                "value": "",
+                "type": "query",
+                "description": "Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity"
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials"
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca"
+              },
+              {
+                "name": "sentiment_avg_gte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg greater than or equal to x."
+              },
+              {
+                "name": "sentiment_avg_lte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg less than or equal to x."
+              },
+              {
+                "name": "sentiment_gte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative."
+              },
+              {
+                "name": "sentiment_lte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score less than or equal to x."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: \"ipo\" -nyse"
+              },
+              {
+                "name": "domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com"
+              },
+              {
+                "name": "exclude_domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to exclude."
+              },
+              {
+                "name": "source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1"
+              },
+              {
+                "name": "exclude_source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to exclude."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "published_before",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published before the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_after",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published after the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_on",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published on the specified date. Supported format: Y-m-d."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort by total_documents or sentiment_avg. Default total_documents."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order of the sort parameter. Default desc."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan."
+              }
+            ]
+          },
+          "docs": "Similar to the entity stats time series endpoint, this returns an aggregation of entities for a single time frame rather than being broken down by date. Useful to find the best or worst performing stocks. Available on Standard plans and above."
+        },
+        {
+          "info": {
+            "name": "Trending entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/trending/aggregation",
+            "params": [
+              {
+                "name": "group_by",
+                "value": "",
+                "type": "query",
+                "description": "Group results by symbol, exchange, industry or country. Default symbol."
+              },
+              {
+                "name": "min_doc_count",
+                "value": "",
+                "type": "query",
+                "description": "The minimum number of total_documents an entity should be identified within to be returned with the results."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "entity_types",
+                "value": "",
+                "type": "query",
+                "description": "Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity"
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials"
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca"
+              },
+              {
+                "name": "sentiment_avg_gte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg greater than or equal to x."
+              },
+              {
+                "name": "sentiment_avg_lte",
+                "value": "",
+                "type": "query",
+                "description": "Refine results to entities with an overall sentiment_avg less than or equal to x."
+              },
+              {
+                "name": "sentiment_gte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative."
+              },
+              {
+                "name": "sentiment_lte",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles with entities with a sentiment_score less than or equal to x."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: \"ipo\" -nyse"
+              },
+              {
+                "name": "domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com"
+              },
+              {
+                "name": "exclude_domains",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of domains to exclude."
+              },
+              {
+                "name": "source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1"
+              },
+              {
+                "name": "exclude_source_ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of source_ids to exclude."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh."
+              },
+              {
+                "name": "published_before",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published before the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_after",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published after the specified date. Supported formats: Y-m-d\\TH:i:s | Y-m-d\\TH:i | Y-m-d\\TH | Y-m-d | Y-m | Y. All dates are UTC."
+              },
+              {
+                "name": "published_on",
+                "value": "",
+                "type": "query",
+                "description": "Find all articles published on the specified date. Supported format: Y-m-d."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort by total_documents or sentiment_avg. Default total_documents."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order of the sort parameter. Default desc."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan."
+              }
+            ]
+          },
+          "docs": "Identify trending entities. Filter by time frame and more; e.g. find which stocks were trending on a specific day, within the past 24 hours, past 7 days, etc. Available on Standard plans and above."
+        },
+        {
+          "info": {
+            "name": "Entity search",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/search",
+            "params": [
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Dynamic search function to find entities."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT"
+              },
+              {
+                "name": "exchanges",
+                "value": "",
+                "type": "query",
+                "description": "Filter results by specific exchanges. Comma separated list."
+              },
+              {
+                "name": "types",
+                "value": "",
+                "type": "query",
+                "description": "Filter results by entity types. Comma separated list."
+              },
+              {
+                "name": "industries",
+                "value": "",
+                "type": "query",
+                "description": "Filter results by industries. Comma separated list."
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "Filter results by ISO 3166-1 two-letter country code of the exchange. Comma separated list."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400)."
+              }
+            ]
+          },
+          "docs": "Search for all entities supported by Marketaux. The limit is 50 for all requests. Available on all plans."
+        },
+        {
+          "info": {
+            "name": "Entity type list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/type/list"
+          },
+          "docs": "Return all supported entity types. Available on all plans."
+        },
+        {
+          "info": {
+            "name": "Industry list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.marketaux.com/v1/entity/industry/list"
+          },
+          "docs": "Return all supported entity industries. Available on all plans."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
