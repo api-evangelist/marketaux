@@ -39,27 +39,47 @@ tags:
   - Entity Recognition
   - Public APIs
 apis:
-  - name: MarketAux API
-    description: >-
-      Live stock market news with tagged tickers, per-entity sentiment and
-      match scores, entity statistics and trending endpoints, delivered as a
-      GET-only JSON API authenticated with an api_token query parameter.
-    humanURL: https://www.marketaux.com/documentation
-    baseURL: https://api.marketaux.com/v1
-    tags:
-      - News
-      - Financial News
-      - Sentiment Analysis
-    properties:
-      - type: Documentation
-        url: https://www.marketaux.com/documentation
-      - type: OpenAPI
-        url: openapi/marketaux-openapi.yml
-      - type: Overlay
-        url: overlays/marketaux-openapi-overlay.yaml
-      - type: MCPServer
-        url: mcp/marketaux-mcp.yml
+- aid: marketaux:marketaux-entities-api
+  name: MarketAux Entities API
+  description: Entity statistics, trending entities, entity search, and entity metadata.
+  humanURL: https://www.marketaux.com/documentation
+  baseURL: https://api.marketaux.com/v1
+  tags:
+  - Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/marketaux-entities-api-openapi.yml
+  - type: Documentation
+    url: https://www.marketaux.com/documentation
+- aid: marketaux:marketaux-news-api
+  name: MarketAux News API
+  description: Financial and market news feeds, similar-article lookup, and article retrieval by UUID.
+  humanURL: https://www.marketaux.com/documentation
+  baseURL: https://api.marketaux.com/v1
+  tags:
+  - News
+  properties:
+  - type: OpenAPI
+    url: openapi/marketaux-news-api-openapi.yml
+  - type: Documentation
+    url: https://www.marketaux.com/documentation
+- aid: marketaux:marketaux-sources-api
+  name: MarketAux Sources API
+  description: News source metadata usable in news feed filters.
+  humanURL: https://www.marketaux.com/documentation
+  baseURL: https://api.marketaux.com/v1
+  tags:
+  - Sources
+  properties:
+  - type: OpenAPI
+    url: openapi/marketaux-sources-api-openapi.yml
+  - type: Documentation
+    url: https://www.marketaux.com/documentation
 common:
+  - type: Overlay
+    url: overlays/marketaux-openapi-overlay.yaml
+  - type: MCPServer
+    url: mcp/marketaux-mcp.yml
   - type: Website
     url: https://www.marketaux.com/
   - type: Documentation
