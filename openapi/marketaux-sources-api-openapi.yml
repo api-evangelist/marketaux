@@ -1,0 +1,180 @@
+openapi: 3.2.0
+info:
+  title: Marketaux Sources API
+  description: Global financial and stock market news API. Generate news feeds filtered by entity symbol, type, exchange, industry, country and more, with per-entity sentiment and match scores. Covers 5,000+ news sources globally in 30+ languages, tracking 200,000+ entities across 80+ markets. Also provides entity statistics (time series and aggregations) and trending-entity endpoints for charting the best and worst performing entities in the news.
+  version: v1
+  termsOfService: https://www.marketaux.com/tos
+  contact:
+    url: https://www.marketaux.com/contact
+servers:
+- url: https://api.marketaux.com
+security:
+- apiToken: []
+tags:
+- name: Sources
+  description: News source metadata usable in news feed filters.
+paths:
+  /v1/news/sources:
+    get:
+      operationId: getNewsSources
+      tags:
+      - Sources
+      summary: News sources
+      description: View sources which can be used in other API requests (domains and source_ids filters). The limit is 50 for all requests. Available on all plans.
+      parameters:
+      - name: distinct_domain
+        in: query
+        description: Group distinct domains from sources. This will make source_id null.
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/language'
+      - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: News sources.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NewsSource'
+        '400':
+          $ref: '#/components/responses/MalformedParameters'
+        '401':
+          $ref: '#/components/responses/InvalidApiToken'
+        '402':
+          $ref: '#/components/responses/UsageLimitReached'
+        '429':
+          $ref: '#/components/responses/RateLimitReached'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '503':
+          $ref: '#/components/responses/MaintenanceMode'
+components:
+  parameters:
+    language:
+      name: language
+      in: query
+      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400).
+      schema:
+        type: integer
+        default: 1
+  responses:
+    RateLimitReached:
+      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UsageLimitReached:
+      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidApiToken:
+      description: 'invalid_api_token: Invalid API token.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: invalid_api_token
+              message: An invalid API token was supplied.
+    MalformedParameters:
+      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    PaginationMeta:
+      type: object
+      description: Pagination metadata returned on list endpoints.
+      properties:
+        found:
+          type: integer
+          description: The number of results found for the request.
+        returned:
+          type: integer
+          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+        page:
+          type: integer
+          description: The page number based on the page parameter.
+    NewsSource:
+      type: object
+      description: A news source feed.
+      properties:
+        source_id:
+          type:
+          - string
+          - 'null'
+          description: The unique ID of the source feed, usable in the source_ids and exclude_source_ids parameters. Null when distinct_domain=true.
+        domain:
+          type: string
+          description: The domain of the source, usable in the domains and exclude_domains parameters.
+        language:
+          type: string
+          description: The source language.
+      example:
+        source_id: adweek.com-1
+        domain: adweek.com
+        language: en
+    Error:
+      type: object
+      description: Marketaux error envelope.
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+      example:
+        error:
+          code: malformed_parameters
+          message: The published_before parameter(s) are incorrectly formatted.
+  securitySchemes:
+    apiToken:
+      type: apiKey
+      in: query
+      name: api_token
+      description: Your API token, found on your account dashboard after signing up at https://www.marketaux.com/register. Passed as a GET parameter on every request.
+externalDocs:
+  description: Marketaux API documentation
+  url: https://www.marketaux.com/documentation
+x-provenance:
+  generated: '2026-07-22'
+  method: generated
+  source: https://www.marketaux.com/documentation
+  note: Marketaux publishes no machine-readable API definition (probes of www.marketaux.com and api.marketaux.com for /openapi.json, /openapi.yaml, /swagger.json, /v1/openapi.json and /api-docs all returned 404 on 2026-07-22). This OpenAPI was generated faithfully from the published HTML API documentation; every path, parameter, response field, and error code below is documented at the source URL. Example values are taken verbatim from the documentation.
