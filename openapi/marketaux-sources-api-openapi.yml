@@ -71,20 +71,8 @@ components:
         type: integer
         default: 1
   responses:
-    RateLimitReached:
-      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UsageLimitReached:
-      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ServerError:
-      description: 'server_error: A server error occurred.'
+    MalformedParameters:
+      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
       content:
         application/json:
           schema:
@@ -99,8 +87,20 @@ components:
             error:
               code: invalid_api_token
               message: An invalid API token was supplied.
-    MalformedParameters:
-      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UsageLimitReached:
+      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimitReached:
+      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
       content:
         application/json:
           schema:
@@ -112,6 +112,23 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      description: Marketaux error envelope.
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+      example:
+        error:
+          code: malformed_parameters
+          message: The published_before parameter(s) are incorrectly formatted.
     PaginationMeta:
       type: object
       description: Pagination metadata returned on list endpoints.
@@ -147,23 +164,6 @@ components:
         source_id: adweek.com-1
         domain: adweek.com
         language: en
-    Error:
-      type: object
-      description: Marketaux error envelope.
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-              description: Machine-readable error code.
-            message:
-              type: string
-              description: Human-readable error message.
-      example:
-        error:
-          code: malformed_parameters
-          message: The published_before parameter(s) are incorrectly formatted.
   securitySchemes:
     apiToken:
       type: apiKey

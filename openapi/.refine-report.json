@@ -1,0 +1,24 @@
+{
+  "provider": "marketaux",
+  "sources": [
+    "_original/marketaux-openapi.yml"
+  ],
+  "outputs": [
+    "marketaux-entities-api-openapi.yml",
+    "marketaux-news-api-openapi.yml",
+    "marketaux-sources-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "marketaux-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "marketaux-entities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "marketaux-news-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "marketaux-sources-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
