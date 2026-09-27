@@ -56,23 +56,21 @@ paths:
         '503':
           $ref: '#/components/responses/MaintenanceMode'
 components:
-  parameters:
-    language:
-      name: language
-      in: query
-      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
-      schema:
-        type: string
-    page:
-      name: page
-      in: query
-      description: Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400).
-      schema:
-        type: integer
-        default: 1
   responses:
     MalformedParameters:
       description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: 'server_error: A server error occurred.'
       content:
         application/json:
           schema:
@@ -87,8 +85,8 @@ components:
             error:
               code: invalid_api_token
               message: An invalid API token was supplied.
-    ServerError:
-      description: 'server_error: A server error occurred.'
+    RateLimitReached:
+      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
       content:
         application/json:
           schema:
@@ -99,36 +97,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    RateLimitReached:
-      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    MaintenanceMode:
-      description: 'maintenance_mode: The service is currently under maintenance.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    language:
+      name: language
+      in: query
+      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400).
+      schema:
+        type: integer
+        default: 1
   schemas:
-    Error:
-      type: object
-      description: Marketaux error envelope.
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-              description: Machine-readable error code.
-            message:
-              type: string
-              description: Human-readable error message.
-      example:
-        error:
-          code: malformed_parameters
-          message: The published_before parameter(s) are incorrectly formatted.
     PaginationMeta:
       type: object
       description: Pagination metadata returned on list endpoints.
@@ -164,6 +147,23 @@ components:
         source_id: adweek.com-1
         domain: adweek.com
         language: en
+    Error:
+      type: object
+      description: Marketaux error envelope.
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+      example:
+        error:
+          code: malformed_parameters
+          message: The published_before parameter(s) are incorrectly formatted.
   securitySchemes:
     apiToken:
       type: apiKey
