@@ -63,18 +63,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    MaintenanceMode:
-      description: 'maintenance_mode: The service is currently under maintenance.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ServerError:
-      description: 'server_error: A server error occurred.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     InvalidApiToken:
       description: 'invalid_api_token: Invalid API token.'
       content:
@@ -85,6 +73,12 @@ components:
             error:
               code: invalid_api_token
               message: An invalid API token was supplied.
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     RateLimitReached:
       description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
       content:
@@ -97,13 +91,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
-    language:
-      name: language
-      in: query
-      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
-      schema:
-        type: string
     page:
       name: page
       in: query
@@ -111,6 +105,12 @@ components:
       schema:
         type: integer
         default: 1
+    language:
+      name: language
+      in: query
+      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
+      schema:
+        type: string
   schemas:
     PaginationMeta:
       type: object

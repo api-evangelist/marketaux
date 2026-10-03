@@ -178,25 +178,29 @@ paths:
           $ref: '#/components/responses/MaintenanceMode'
 components:
   parameters:
-    groupSimilar:
-      name: group_similar
+    search:
+      name: search
       in: query
-      description: Group similar articles to avoid displaying multiple articles on the same topic/subject. Default true.
+      description: 'Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: "ipo" -nyse'
+      schema:
+        type: string
+    mustHaveEntities:
+      name: must_have_entities
+      in: query
+      description: Set to true to ensure that at least one entity has been identified within the article. Default false.
       schema:
         type: boolean
-        default: true
-    sentimentLte:
-      name: sentiment_lte
+        default: false
+    domains:
+      name: domains
       in: query
-      description: Find all articles with entities with a sentiment_score less than or equal to x.
+      description: 'Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com'
       schema:
-        type: number
-        minimum: -1
-        maximum: 1
-    publishedAfter:
-      name: published_after
+        type: string
+    language:
+      name: language
       in: query
-      description: 'Find all articles published after the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
+      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
       schema:
         type: string
     sentimentGte:
@@ -207,36 +211,6 @@ components:
         type: number
         minimum: -1
         maximum: 1
-    domains:
-      name: domains
-      in: query
-      description: 'Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com'
-      schema:
-        type: string
-    countries:
-      name: countries
-      in: query
-      description: 'Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca'
-      schema:
-        type: string
-    publishedOn:
-      name: published_on
-      in: query
-      description: 'Find all articles published on the specified date. Supported format: Y-m-d.'
-      schema:
-        type: string
-    search:
-      name: search
-      in: query
-      description: 'Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: "ipo" -nyse'
-      schema:
-        type: string
-    symbols:
-      name: symbols
-      in: query
-      description: 'Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT'
-      schema:
-        type: string
     sourceIds:
       name: source_ids
       in: query
@@ -250,22 +224,10 @@ components:
       schema:
         type: boolean
         default: false
-    limit:
-      name: limit
+    publishedOn:
+      name: published_on
       in: query
-      description: Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan.
-      schema:
-        type: integer
-    entityTypes:
-      name: entity_types
-      in: query
-      description: 'Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity'
-      schema:
-        type: string
-    publishedBefore:
-      name: published_before
-      in: query
-      description: 'Find all articles published before the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
+      description: 'Find all articles published on the specified date. Supported format: Y-m-d.'
       schema:
         type: string
     uuidPath:
@@ -276,36 +238,24 @@ components:
       schema:
         type: string
         format: uuid
-    page:
-      name: page
+    sentimentLte:
+      name: sentiment_lte
       in: query
-      description: Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400).
+      description: Find all articles with entities with a sentiment_score less than or equal to x.
       schema:
-        type: integer
-        default: 1
-    language:
-      name: language
+        type: number
+        minimum: -1
+        maximum: 1
+    countries:
+      name: countries
       in: query
-      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
-      schema:
-        type: string
-    mustHaveEntities:
-      name: must_have_entities
-      in: query
-      description: Set to true to ensure that at least one entity has been identified within the article. Default false.
-      schema:
-        type: boolean
-        default: false
-    industries:
-      name: industries
-      in: query
-      description: 'Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials'
+      description: 'Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca'
       schema:
         type: string
-    excludeSourceIds:
-      name: exclude_source_ids
+    symbols:
+      name: symbols
       in: query
-      description: Comma separated list of source_ids to exclude.
+      description: 'Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT'
       schema:
         type: string
     excludeDomains:
@@ -314,46 +264,120 @@ components:
       description: Comma separated list of domains to exclude.
       schema:
         type: string
+    excludeSourceIds:
+      name: exclude_source_ids
+      in: query
+      description: Comma separated list of source_ids to exclude.
+      schema:
+        type: string
+    entityTypes:
+      name: entity_types
+      in: query
+      description: 'Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity'
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan.
+      schema:
+        type: integer
+    groupSimilar:
+      name: group_similar
+      in: query
+      description: Group similar articles to avoid displaying multiple articles on the same topic/subject. Default true.
+      schema:
+        type: boolean
+        default: true
+    page:
+      name: page
+      in: query
+      description: Paginate through the result set. Default 1. The max result set cannot exceed 20,000 (e.g. with limit 50 the max page is 400).
+      schema:
+        type: integer
+        default: 1
+    industries:
+      name: industries
+      in: query
+      description: 'Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials'
+      schema:
+        type: string
+    publishedAfter:
+      name: published_after
+      in: query
+      description: 'Find all articles published after the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
+      schema:
+        type: string
+    publishedBefore:
+      name: published_before
+      in: query
+      description: 'Find all articles published before the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
+      schema:
+        type: string
+  responses:
+    MalformedParameters:
+      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UsageLimitReached:
+      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ResourceNotFound:
+      description: 'resource_not_found: Resource could not be found (also invalid_api_endpoint when the API route does not exist).'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidApiToken:
+      description: 'invalid_api_token: Invalid API token.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: invalid_api_token
+              message: An invalid API token was supplied.
+    RateLimitReached:
+      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Entity:
+    PaginationMeta:
       type: object
-      description: An entity identified within an article, with match and sentiment scores.
+      description: Pagination metadata returned on list endpoints.
       properties:
-        symbol:
-          type: string
-          description: Symbol of the identified entity.
-        name:
-          type: string
-          description: Name of the identified entity.
-        exchange:
-          type:
-          - string
-          - 'null'
-          description: Exchange identifier of the identified entity.
-        exchange_long:
-          type:
-          - string
-          - 'null'
-          description: Exchange name of the identified entity.
-        country:
-          type: string
-          description: Exchange country of the identified entity.
-        type:
-          type: string
-          description: Type of the identified entity (equity, index, etf, mutualfund, currency, cryptocurrency).
-        industry:
-          type: string
-          description: Industry of the identified entity.
-        match_score:
-          type: number
-          description: The overall strength of the matching for the identified entity.
-        sentiment_score:
-          type: number
-          description: Average sentiment of all highlighted text found for the identified entity.
-        highlights:
-          type: array
-          items:
-            $ref: '#/components/schemas/Highlight'
+        found:
+          type: integer
+          description: The number of results found for the request.
+        returned:
+          type: integer
+          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+        page:
+          type: integer
+          description: The page number based on the page parameter.
     NewsArticle:
       type: object
       description: A news article with identified entities and sentiment analysis.
@@ -429,22 +453,45 @@ components:
             sentiment: 0.7783
             highlighted_in: main_text
         similar: []
-    PaginationMeta:
+    Entity:
       type: object
-      description: Pagination metadata returned on list endpoints.
+      description: An entity identified within an article, with match and sentiment scores.
       properties:
-        found:
-          type: integer
-          description: The number of results found for the request.
-        returned:
-          type: integer
-          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
-        limit:
-          type: integer
-          description: The limit based on the limit parameter.
-        page:
-          type: integer
-          description: The page number based on the page parameter.
+        symbol:
+          type: string
+          description: Symbol of the identified entity.
+        name:
+          type: string
+          description: Name of the identified entity.
+        exchange:
+          type:
+          - string
+          - 'null'
+          description: Exchange identifier of the identified entity.
+        exchange_long:
+          type:
+          - string
+          - 'null'
+          description: Exchange name of the identified entity.
+        country:
+          type: string
+          description: Exchange country of the identified entity.
+        type:
+          type: string
+          description: Type of the identified entity (equity, index, etf, mutualfund, currency, cryptocurrency).
+        industry:
+          type: string
+          description: Industry of the identified entity.
+        match_score:
+          type: number
+          description: The overall strength of the matching for the identified entity.
+        sentiment_score:
+          type: number
+          description: Average sentiment of all highlighted text found for the identified entity.
+        highlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Highlight'
     Error:
       type: object
       description: Marketaux error envelope.
@@ -478,53 +525,6 @@ components:
           - title
           - main_text
           description: Where the highlight was found.
-  responses:
-    ServerError:
-      description: 'server_error: A server error occurred.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    RateLimitReached:
-      description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UsageLimitReached:
-      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InvalidApiToken:
-      description: 'invalid_api_token: Invalid API token.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: invalid_api_token
-              message: An invalid API token was supplied.
-    MalformedParameters:
-      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    MaintenanceMode:
-      description: 'maintenance_mode: The service is currently under maintenance.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ResourceNotFound:
-      description: 'resource_not_found: Resource could not be found (also invalid_api_endpoint when the API route does not exist).'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     apiToken:
       type: apiKey
