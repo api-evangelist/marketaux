@@ -63,30 +63,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    InvalidApiToken:
-      description: 'invalid_api_token: Invalid API token.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: invalid_api_token
-              message: An invalid API token was supplied.
-    ServerError:
-      description: 'server_error: A server error occurred.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     RateLimitReached:
       description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UsageLimitReached:
-      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
       content:
         application/json:
           schema:
@@ -97,7 +75,35 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    ServerError:
+      description: 'server_error: A server error occurred.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidApiToken:
+      description: 'invalid_api_token: Invalid API token.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: invalid_api_token
+              message: An invalid API token was supplied.
+    UsageLimitReached:
+      description: 'usage_limit_reached: Usage limit of your plan has been reached. Usage limit and remaining requests can be found on the X-UsageLimit-Limit header.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
+    language:
+      name: language
+      in: query
+      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
+      schema:
+        type: string
     page:
       name: page
       in: query
@@ -105,29 +111,7 @@ components:
       schema:
         type: integer
         default: 1
-    language:
-      name: language
-      in: query
-      description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
-      schema:
-        type: string
   schemas:
-    PaginationMeta:
-      type: object
-      description: Pagination metadata returned on list endpoints.
-      properties:
-        found:
-          type: integer
-          description: The number of results found for the request.
-        returned:
-          type: integer
-          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
-        limit:
-          type: integer
-          description: The limit based on the limit parameter.
-        page:
-          type: integer
-          description: The page number based on the page parameter.
     NewsSource:
       type: object
       description: A news source feed.
@@ -147,6 +131,22 @@ components:
         source_id: adweek.com-1
         domain: adweek.com
         language: en
+    PaginationMeta:
+      type: object
+      description: Pagination metadata returned on list endpoints.
+      properties:
+        found:
+          type: integer
+          description: The number of results found for the request.
+        returned:
+          type: integer
+          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+        page:
+          type: integer
+          description: The page number based on the page parameter.
     Error:
       type: object
       description: Marketaux error envelope.

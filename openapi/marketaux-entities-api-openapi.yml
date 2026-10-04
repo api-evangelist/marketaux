@@ -370,16 +370,10 @@ paths:
           $ref: '#/components/responses/MaintenanceMode'
 components:
   parameters:
-    search:
-      name: search
+    sourceIds:
+      name: source_ids
       in: query
-      description: 'Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: "ipo" -nyse'
-      schema:
-        type: string
-    domains:
-      name: domains
-      in: query
-      description: 'Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com'
+      description: 'Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1'
       schema:
         type: string
     language:
@@ -388,34 +382,10 @@ components:
       description: 'Comma separated list of languages to include (e.g. en,es). Default is all. Supported languages: ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, id, it, ja, ko, lt, multi, nl, no, pl, pt, ro, ru, sk, sv, ta, th, tr, uk, vi, zh.'
       schema:
         type: string
-    sentimentGte:
-      name: sentiment_gte
+    sentimentLte:
+      name: sentiment_lte
       in: query
-      description: Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative.
-      schema:
-        type: number
-        minimum: -1
-        maximum: 1
-    statsSortOrder:
-      name: sort_order
-      in: query
-      description: Sort order of the sort parameter. Default desc.
-      schema:
-        type: string
-        enum:
-        - desc
-        - asc
-        default: desc
-    sourceIds:
-      name: source_ids
-      in: query
-      description: 'Comma separated list of source_ids to include. Obtain source_ids from the sources endpoint. Example: adweek.com-1,adage.com-1'
-      schema:
-        type: string
-    sentimentAvgLte:
-      name: sentiment_avg_lte
-      in: query
-      description: Refine results to entities with an overall sentiment_avg less than or equal to x.
+      description: Find all articles with entities with a sentiment_score less than or equal to x.
       schema:
         type: number
         minimum: -1
@@ -432,62 +402,24 @@ components:
         - industry
         - country
         default: symbol
-    publishedOn:
-      name: published_on
+    sentimentAvgLte:
+      name: sentiment_avg_lte
       in: query
-      description: 'Find all articles published on the specified date. Supported format: Y-m-d.'
-      schema:
-        type: string
-    minDocCount:
-      name: min_doc_count
-      in: query
-      description: The minimum number of total_documents an entity should be identified within to be returned with the results.
-      schema:
-        type: integer
-    sentimentLte:
-      name: sentiment_lte
-      in: query
-      description: Find all articles with entities with a sentiment_score less than or equal to x.
+      description: Refine results to entities with an overall sentiment_avg less than or equal to x.
       schema:
         type: number
         minimum: -1
         maximum: 1
-    countries:
-      name: countries
+    statsSortOrder:
+      name: sort_order
       in: query
-      description: 'Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca'
+      description: Sort order of the sort parameter. Default desc.
       schema:
         type: string
-    symbols:
-      name: symbols
-      in: query
-      description: 'Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT'
-      schema:
-        type: string
-    excludeDomains:
-      name: exclude_domains
-      in: query
-      description: Comma separated list of domains to exclude.
-      schema:
-        type: string
-    excludeSourceIds:
-      name: exclude_source_ids
-      in: query
-      description: Comma separated list of source_ids to exclude.
-      schema:
-        type: string
-    entityTypes:
-      name: entity_types
-      in: query
-      description: 'Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity'
-      schema:
-        type: string
-    limit:
-      name: limit
-      in: query
-      description: Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan.
-      schema:
-        type: integer
+        enum:
+        - desc
+        - asc
+        default: desc
     statsSort:
       name: sort
       in: query
@@ -498,10 +430,28 @@ components:
         - total_documents
         - sentiment_avg
         default: total_documents
-    sentimentAvgGte:
-      name: sentiment_avg_gte
+    minDocCount:
+      name: min_doc_count
       in: query
-      description: Refine results to entities with an overall sentiment_avg greater than or equal to x.
+      description: The minimum number of total_documents an entity should be identified within to be returned with the results.
+      schema:
+        type: integer
+    publishedOn:
+      name: published_on
+      in: query
+      description: 'Find all articles published on the specified date. Supported format: Y-m-d.'
+      schema:
+        type: string
+    domains:
+      name: domains
+      in: query
+      description: 'Comma separated list of domains to include. Obtain domains from the sources endpoint. Example: adweek.com,adage.com'
+      schema:
+        type: string
+    sentimentGte:
+      name: sentiment_gte
+      in: query
+      description: Find all articles with entities with a sentiment_score greater than or equal to x. Sentiment is between -1 and +1; 0 = neutral, above 0 = positive, below 0 = negative.
       schema:
         type: number
         minimum: -1
@@ -513,16 +463,16 @@ components:
       schema:
         type: integer
         default: 1
+    entityTypes:
+      name: entity_types
+      in: query
+      description: 'Specify the type of entities identified within the article. Comma separated. Example: entity_types=index,equity'
+      schema:
+        type: string
     industries:
       name: industries
       in: query
       description: 'Specify the industries of entities identified within the article. Comma separated. Example: industries=Technology,Industrials'
-      schema:
-        type: string
-    publishedAfter:
-      name: published_after
-      in: query
-      description: 'Find all articles published after the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
       schema:
         type: string
     publishedBefore:
@@ -531,9 +481,59 @@ components:
       description: 'Find all articles published before the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
       schema:
         type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results to return. The maximum limit is based on your plan; the default limit is the maximum specified for your plan.
+      schema:
+        type: integer
+    search:
+      name: search
+      in: query
+      description: 'Full-text search over article body and title. Supports advanced query syntax: + (AND), | (OR), - (negate), quotes (phrase), * (prefix), parentheses (precedence); escape literals with a backslash. Example: "ipo" -nyse'
+      schema:
+        type: string
+    countries:
+      name: countries
+      in: query
+      description: 'Specify the country of the exchange of which entities have been identified within the article. Comma separated. Example: countries=us,ca'
+      schema:
+        type: string
+    sentimentAvgGte:
+      name: sentiment_avg_gte
+      in: query
+      description: Refine results to entities with an overall sentiment_avg greater than or equal to x.
+      schema:
+        type: number
+        minimum: -1
+        maximum: 1
+    symbols:
+      name: symbols
+      in: query
+      description: 'Specify entity symbol(s) which have been identified within the article. Comma separated. Example: symbols=TSLA,AMZN,MSFT'
+      schema:
+        type: string
+    publishedAfter:
+      name: published_after
+      in: query
+      description: 'Find all articles published after the specified date. Supported formats: Y-m-d\TH:i:s | Y-m-d\TH:i | Y-m-d\TH | Y-m-d | Y-m | Y. All dates are UTC.'
+      schema:
+        type: string
+    excludeSourceIds:
+      name: exclude_source_ids
+      in: query
+      description: Comma separated list of source_ids to exclude.
+      schema:
+        type: string
+    excludeDomains:
+      name: exclude_domains
+      in: query
+      description: Comma separated list of domains to exclude.
+      schema:
+        type: string
   responses:
-    MalformedParameters:
-      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
+    ServerError:
+      description: 'server_error: A server error occurred.'
       content:
         application/json:
           schema:
@@ -544,20 +544,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    EndpointAccessRestricted:
-      description: 'endpoint_access_restricted: Access to the endpoint is not available on your current subscription plan.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    MaintenanceMode:
-      description: 'maintenance_mode: The service is currently under maintenance.'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ServerError:
-      description: 'server_error: A server error occurred.'
+    MalformedParameters:
+      description: 'malformed_parameters: Validation of parameters failed. The failed parameters are usually shown in the error message.'
       content:
         application/json:
           schema:
@@ -572,13 +560,54 @@ components:
             error:
               code: invalid_api_token
               message: An invalid API token was supplied.
+    MaintenanceMode:
+      description: 'maintenance_mode: The service is currently under maintenance.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     RateLimitReached:
       description: 'rate_limit_reached: Too many requests in the past 60 seconds. Rate limit and remaining requests can be found on the X-RateLimit-Limit header.'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    EndpointAccessRestricted:
+      description: 'endpoint_access_restricted: Access to the endpoint is not available on your current subscription plan.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    PaginationMeta:
+      type: object
+      description: Pagination metadata returned on list endpoints.
+      properties:
+        found:
+          type: integer
+          description: The number of results found for the request.
+        returned:
+          type: integer
+          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
+        limit:
+          type: integer
+          description: The limit based on the limit parameter.
+        page:
+          type: integer
+          description: The page number based on the page parameter.
+    TrendingEntity:
+      allOf:
+      - $ref: '#/components/schemas/EntityAggregation'
+      - type: object
+        properties:
+          score:
+            type: number
+            description: The relevance score for the trending entity.
+      example:
+        key: NVDA
+        total_documents: 22
+        sentiment_avg: 0.436025815253908
+        score: 3.7920454395721324
     EntityStatsBucket:
       type: object
       description: One time-series bucket of entity statistics.
@@ -596,35 +625,6 @@ components:
         - key: TSLA
           total_documents: 14
           sentiment_avg: 0.388841356283852
-    TrendingEntity:
-      allOf:
-      - $ref: '#/components/schemas/EntityAggregation'
-      - type: object
-        properties:
-          score:
-            type: number
-            description: The relevance score for the trending entity.
-      example:
-        key: NVDA
-        total_documents: 22
-        sentiment_avg: 0.436025815253908
-        score: 3.7920454395721324
-    PaginationMeta:
-      type: object
-      description: Pagination metadata returned on list endpoints.
-      properties:
-        found:
-          type: integer
-          description: The number of results found for the request.
-        returned:
-          type: integer
-          description: The number of results returned on the page. If lower than limit, there are no more results after this page.
-        limit:
-          type: integer
-          description: The limit based on the limit parameter.
-        page:
-          type: integer
-          description: The page number based on the page parameter.
     AggregationMeta:
       type: object
       description: Metadata returned on aggregation endpoints.
@@ -635,35 +635,6 @@ components:
         limit:
           type: integer
           description: The limit based on the limit parameter.
-    EntitySearchResult:
-      type: object
-      description: An entity supported by Marketaux.
-      properties:
-        symbol:
-          type: string
-          description: Unique entity symbol (or ticker).
-        name:
-          type: string
-          description: Entity name.
-        type:
-          type: string
-          description: The entity type.
-        industry:
-          type: string
-          description: The entity industry.
-        exchange:
-          type:
-          - string
-          - 'null'
-          description: The exchange identifier.
-        exchange_long:
-          type:
-          - string
-          - 'null'
-          description: The exchange name.
-        country:
-          type: string
-          description: The ISO 3166-1 two-letter country code of the exchange locale ('eu' and 'global' are also included).
     EntityAggregation:
       type: object
       description: Aggregated document count and sentiment for a grouped key.
@@ -700,6 +671,35 @@ components:
         error:
           code: malformed_parameters
           message: The published_before parameter(s) are incorrectly formatted.
+    EntitySearchResult:
+      type: object
+      description: An entity supported by Marketaux.
+      properties:
+        symbol:
+          type: string
+          description: Unique entity symbol (or ticker).
+        name:
+          type: string
+          description: Entity name.
+        type:
+          type: string
+          description: The entity type.
+        industry:
+          type: string
+          description: The entity industry.
+        exchange:
+          type:
+          - string
+          - 'null'
+          description: The exchange identifier.
+        exchange_long:
+          type:
+          - string
+          - 'null'
+          description: The exchange name.
+        country:
+          type: string
+          description: The ISO 3166-1 two-letter country code of the exchange locale ('eu' and 'global' are also included).
   securitySchemes:
     apiToken:
       type: apiKey
