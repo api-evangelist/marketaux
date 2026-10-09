@@ -139,3 +139,69 @@ plans:
       Custom daily requests, custom articles per request, and custom SLA,
       negotiated directly with Marketaux.
 plan_count: 6
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - negotiated
+  - subscription
+  units:
+  - request
+  plans:
+  - name: Free
+    access: free
+    model: metered
+    model_how: derived
+    units:
+    - other
+    - request
+    periods:
+    - day
+    - per-use
+  - name: Basic
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    - request
+    periods:
+    - day
+    - per-use
+  - name: Standard
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    - request
+    periods:
+    - day
+    - per-use
+  - name: Pro
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    - request
+    periods:
+    - day
+    - per-use
+  - name: Pro 50K
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    - request
+    periods:
+    - day
+    - per-use
+  - name: Custom
+    access: negotiated
+    model: negotiated
+    model_how: stated
+    units: []
+    periods: []
